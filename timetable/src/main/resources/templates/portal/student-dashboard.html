@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Student Section Timetable</title>
+    <style>
+        body { font-family: 'Segoe UI', Arial, sans-serif; background: #0f172a; color: #f1f5f9; margin: 0; padding: 30px; }
+        .box { background: #1e293b; max-width: 1100px; margin: 40px auto; padding: 30px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); border-top: 5px solid #2ecc71; }
+        h1 { color: #10b981; margin-top: 0; font-size: 2rem; }
+        .profile-banner { background: #2c3e50; padding: 12px 20px; border-radius: 6px; font-weight: bold; color: #e2e8f0; margin-bottom: 25px; font-size: 14px; }
+        
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; table-layout: fixed; }
+        th, td { padding: 15px; border: 1px solid #334155; text-align: center; vertical-align: top; word-wrap: break-word; }
+        th { background-color: #2c3e50; font-weight: bold; color: #10b981; font-size: 14px; text-transform: uppercase; }
+        td:first-child, th:first-child { background-color: #0f172a; color: #ffffff; font-weight: bold; width: 120px; }
+        
+        .grid-card { background: linear-gradient(135deg, #1e3a8a 0%, #172554 100%); padding: 12px; border-radius: 6px; box-shadow: 0 4px 6px rgba(0,0,0,0.2); text-align: center; color: white; border-left: 4px solid #10b981; }
+        .subject-title { font-weight: bold; font-size: 14px; color: #ffffff; }
+        .instructor-name { font-size: 12px; color: #94a3b8; margin-top: 4px; font-style: italic; }
+        .room-tag { font-size: 12px; margin-top: 6px; color: #a7f3d0; font-weight: bold; }
+        
+        .btn-out { display: inline-block; background: #2ecc71; color: white; padding: 10px 20px; text-decoration: none; border-radius: 6px; font-weight: bold; margin-top: 25px; transition: background 0.2s; }
+        .btn-out:hover { background: #27ae60; }
+    </style>
+</head>
+<body>
+
+    <div class="box">
+        <h1>Student Schedule Matrix Hub</h1>
+        
+        <div class="profile-banner" th:text="'Active Profile Target: ' + ${studentYear} + ' - ' + ${studentBranch} + ' (Section: ' + ${studentSection} + ')'">
+            Active Profile Target
+        </div>
+        
+        <p th:if="${mySchedule == null || mySchedule.isEmpty()}" style="color: #fef2f2; font-weight: bold; background: #991b1b; padding: 15px; border-radius: 6px;">
+            [NO INFORMATION AVAILABLE: Timetable is not generated yet! Please ask Admin to compile resources.]
+        </p>
+        
+        <table th:if="${mySchedule != null && !mySchedule.isEmpty()}">
+            <thead>
+                <tr>
+                    <th>Day / Time</th>
+                    <th>Period 1<br><span style="font-size:11px; color:#94a3b8; text-transform:none;">09:20 - 10:10</span></th>
+                    <th>Period 2<br><span style="font-size:11px; color:#94a3b8; text-transform:none;">10:20 - 11:10</span></th>
+                    <th>Period 3<br><span style="font-size:11px; color:#94a3b8; text-transform:none;">11:20 - 12:10</span></th>
+                    <th>Period 4<br><span style="font-size:11px; color:#94a3b8; text-transform:none;">12:20 - 01:10</span></th>
+                    <th>Period 5<br><span style="font-size:11px; color:#94a3b8; text-transform:none;">02:00 - 02:50</span></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="day : ${#strings.arraySplit('Monday,Tuesday,Wednesday,Thursday,Friday', ',')}">
+                    <td th:text="${day}"></td>
+                    <td th:each="slot : ${#strings.arraySplit('09:20 - 10:10,10:20 - 11:10,11:20 - 12:10,12:20 - 01:10,02:00 - 02:50', ',')}">
+                        <div th:each="entry : ${mySchedule}" th:if="${entry.dayOfWeek == day && entry.timeSlot == slot}" class="grid-card">
+                            <div class="subject-title" th:text="${entry.subjectName}">Subject</div>
+                            <div class="instructor-name" th:text="${entry.teacherName}">Instructor</div>
+                            <div class="room-tag" th:text="'Room: ' + ${entry.roomNumber}">Room</div>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <br>
+        <a href="/" class="btn-out">Sign Out Tracker</a>
+    </div>
+
+</body>
+</html>

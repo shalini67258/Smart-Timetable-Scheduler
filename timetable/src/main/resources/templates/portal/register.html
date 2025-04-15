@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Registration Terminal</title>
+    <style>
+        body { background: #0f172a; color: white; font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin:0; }
+        .box { background: #1e293b; padding: 30px; border-radius: 12px; width: 340px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+        input, select { width: 100%; padding: 10px; margin: 8px 0; border-radius: 6px; border: 1px solid #475569; background: #334155; color: white; box-sizing: border-box; }
+        button { width: 100%; padding: 12px; background: #3b82f6; border: none; border-radius: 6px; color: white; font-weight: bold; cursor: pointer; }
+        label { font-size: 13px; color: #94a3b8; display: block; margin-top: 8px; margin-bottom: 2px; }
+        .error-msg { color: #f87171; background: rgba(248, 113, 113, 0.1); padding: 8px; border-radius: 4px; margin-bottom: 10px; font-size: 14px; text-align: center; }
+    </style>
+    <script>
+        function toggleRoleFields() {
+            var role = document.getElementById("roleSelect").value;
+            var studentFields = document.getElementById("studentFields");
+            var nameFieldContainer = document.getElementById("nameFieldContainer");
+            var fullNameInput = document.getElementById("fullNameInput");
+
+            if (role === "STUDENT") {
+                studentFields.style.display = "block";
+                nameFieldContainer.style.display = "block";
+                fullNameInput.required = true;
+            } else if (role === "FACULTY") {
+                // Faculty names are pulled via email whitelists automatically
+                studentFields.style.display = "none";
+                nameFieldContainer.style.display = "none";
+                fullNameInput.required = false;
+                fullNameInput.value = "Faculty Member"; 
+            } else {
+                studentFields.style.display = "none";
+                nameFieldContainer.style.display = "block";
+                fullNameInput.required = true;
+            }
+        }
+        window.onload = toggleRoleFields;
+    </script>
+</head>
+<body>
+    <div class="box">
+        <h2>DRK Platform Registration</h2>
+        
+        <div class="error-msg" th:if="${errorMsg != null}" th:text="${errorMsg}"></div>
+        
+        <form th:action="@{/register/process}" th:object="${user}" method="POST">
+            
+            <div id="nameFieldContainer">
+                <input type="text" id="fullNameInput" th:field="*{fullName}" placeholder="Full Name">
+            </div>
+            
+            <input type="email" th:field="*{email}" placeholder="Email Address" required>
+            <input type="password" th:field="*{password}" placeholder="Secure Password" required>
+            
+            <select id="roleSelect" th:field="*{role}" onchange="toggleRoleFields()" required>
+                <option value="STUDENT">STUDENT</option>
+                <option value="FACULTY">FACULTY</option>
+                <option value="ADMIN">ADMIN</option>
+            </select>
+
+            <div id="studentFields">
+                <label>Select Branch:</label>
+                <select name="branch">
+                    <option value="">-- Select Branch --</option>
+                    <option th:each="c : ${dynamicBranches}" th:value="${c.courseName}" th:text="${c.courseName}"></option>
+                </select>
+
+                <label>Select Year:</label>
+                <select name="academicYear">
+                    <option value="1st Year">1st Year</option>
+                    <option value="2nd Year">2nd Year</option>
+                    <option value="3rd Year">3rd Year</option>
+                    <option value="4th Year">4th Year</option>
+                </select>
+
+                <label>Select Section:</label>
+                <select name="sectionName">
+                    <option value="">-- Select Section --</option>
+                    <option th:each="sec : ${sections}" th:value="${sec}" th:text="${sec}"></option>
+                </select>
+            </div>
+
+            <button type="submit" style="margin-top:20px;">Register Profile</button>
+        </form>
+    </div>
+</body>
+</html>

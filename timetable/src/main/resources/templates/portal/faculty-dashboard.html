@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Faculty Routine Matrix</title>
+    <style>
+        body { font-family: 'Segoe UI', Arial, sans-serif; background: #0f172a; color: #f1f5f9; margin: 0; padding: 30px; }
+        .box { background: #1e293b; max-width: 1100px; margin: 40px auto; padding: 30px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); border-top: 5px solid #e67e22; }
+        h1 { color: #f97316; margin-top: 0; font-size: 2rem; }
+        h3 { color: #cbd5e1; font-weight: 400; margin-bottom: 25px; }
+        
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; table-layout: fixed; }
+        th, td { padding: 15px; border: 1px solid #334155; text-align: center; vertical-align: top; word-wrap: break-word; }
+        th { background-color: #2c3e50; font-weight: bold; color: #f97316; font-size: 14px; text-transform: uppercase; }
+        td:first-child, th:first-child { background-color: #0f172a; color: #ffffff; font-weight: bold; width: 120px; }
+        
+        .grid-card { background: linear-gradient(135deg, #d35400 0%, #a04000 100%); padding: 10px; border-radius: 6px; box-shadow: 0 4px 6px rgba(0,0,0,0.2); text-align: center; color: white; }
+        .subject-title { font-weight: bold; font-size: 14px; }
+        .room-tag { font-size: 12px; margin-top: 5px; color: #fed7aa; font-weight: bold; }
+        .meta-tags { margin-top: 6px; display: flex; gap: 4px; justify-content: center; flex-wrap: wrap; }
+        .badge-year { background: #34495e; color: white; padding: 2px 6px; border-radius: 4px; font-size: 10px; font-weight: bold; }
+        .badge-section { background: #2980b9; color: white; padding: 2px 6px; border-radius: 4px; font-size: 10px; font-weight: bold; }
+        
+        .btn-out { display: inline-block; background: #e67e22; color: white; padding: 10px 20px; text-decoration: none; border-radius: 6px; font-weight: bold; margin-top: 25px; transition: background 0.2s; }
+        .btn-out:hover { background: #d35400; }
+        .empty-cell { color: #475569; font-size: 12px; font-style: italic; padding-top: 15px; }
+    </style>
+</head>
+<body>
+
+    <div class="box">
+        <h1 th:text="'Welcome Professor: ' + ${teacherName}">Professor Routine View</h1>
+        <h3>Your Personal Live Weekly Schedule Assignments (Grid Matrix Format):</h3>
+        
+        <p th:if="${mySchedule == null || mySchedule.isEmpty()}" style="color: #ffedd5; font-weight: bold; background: #7c2d12; padding: 15px; border-radius: 6px;">
+            [NO INFORMATION AVAILABLE: The institutional administrator has not compiled the master timetable grid yet.]
+        </p>
+        
+        <table th:if="${mySchedule != null && !mySchedule.isEmpty()}">
+            <thead>
+                <tr>
+                    <th>Day / Time</th>
+                    <th>Period 1<br><span style="font-size:11px; color:#94a3b8; text-transform:none;">09:20 - 10:10</span></th>
+                    <th>Period 2<br><span style="font-size:11px; color:#94a3b8; text-transform:none;">10:20 - 11:10</span></th>
+                    <th>Period 3<br><span style="font-size:11px; color:#94a3b8; text-transform:none;">11:20 - 12:10</span></th>
+                    <th>Period 4<br><span style="font-size:11px; color:#94a3b8; text-transform:none;">12:20 - 01:10</span></th>
+                    <th>Period 5<br><span style="font-size:11px; color:#94a3b8; text-transform:none;">02:00 - 02:50</span></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="day : ${#strings.arraySplit('Monday,Tuesday,Wednesday,Thursday,Friday', ',')}">
+                    <td th:text="${day}"></td>
+                    <td th:each="slot : ${#strings.arraySplit('09:20 - 10:10,10:20 - 11:10,11:20 - 12:10,12:20 - 01:10,02:00 - 02:50', ',')}">
+                        <div th:each="entry : ${mySchedule}" th:if="${entry.dayOfWeek == day && entry.timeSlot == slot}" class="grid-card">
+                            <div class="subject-title" th:text="${entry.subjectName}">Subject</div>
+                            <div class="room-tag" th:text="'Room: ' + ${entry.roomNumber}">Room</div>
+                            <div class="meta-tags">
+                                <span class="badge-year" th:text="${entry.academicYear}"></span>
+                                <span class="badge-section" th:text="${entry.sectionName}"></span>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <a href="/" class="btn-out">Sign Out Matrix</a>
+    </div>
+
+</body>
+</html>

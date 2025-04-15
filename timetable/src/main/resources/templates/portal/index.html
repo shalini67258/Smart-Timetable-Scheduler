@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DRK Timetable Portal</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            background-color: #f4f7fa;
+            color: #2d3748;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .header-container {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .header-container .badge {
+            background-color: #ebf8ff;
+            color: #2b6cb0;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: inline-block;
+            margin-bottom: 16px;
+            border: 1px solid #bee3f8;
+        }
+
+        .header-container h1 {
+            font-size: 2.8rem;
+            color: #1a202c;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            margin-bottom: 14px;
+        }
+
+        .header-container p {
+            color: #718096;
+            font-size: 1.15rem;
+            max-width: 650px;
+            line-height: 1.6;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 32px;
+            width: 100%;
+            max-width: 1100px;
+        }
+
+        .portal-card {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 20px;
+            padding: 45px 35px;
+            text-align: left;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px -1px rgba(0, 0, 0, 0.02);
+        }
+
+        /* Top Border Color Indicators */
+        .portal-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .admin-card::before { background-color: #dd6b20; } /* Sophisticated Amber/Orange */
+        .faculty-card::before { background-color: #319795; } /* Premium Teal */
+        .student-card::before { background-color: #3182ce; } /* Deep Corporate Blue */
+
+        .portal-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 10px 10px -5px rgba(0, 0, 0, 0.03);
+            border-color: transparent;
+        }
+
+        .portal-card .icon-box {
+            width: 56px;
+            height: 56px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 28px;
+            font-size: 1.6rem;
+            transition: transform 0.3s ease;
+        }
+
+        .admin-card .icon-box { background-color: #fffaf0; border: 1px solid #fdeeac; }
+        .faculty-card .icon-box { background-color: #e6fffa; border: 1px solid #b2f5ea; }
+        .student-card .icon-box { background-color: #ebf8ff; border: 1px solid #bee3f8; }
+
+        .portal-card:hover .icon-box {
+            transform: scale(1.05);
+        }
+
+        .portal-card h2 {
+            font-size: 1.45rem;
+            color: #1a202c;
+            margin-bottom: 12px;
+            font-weight: 700;
+        }
+
+        .portal-card p {
+            color: #4a5568;
+            font-size: 0.98rem;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .action-link {
+            font-size: 0.9rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            color: #2b6cb0;
+            transition: color 0.2s ease;
+        }
+
+        .admin-card .action-link { color: #dd6b20; }
+        .faculty-card .action-link { color: #319795; }
+        .student-card .action-link { color: #3182ce; }
+
+        .portal-card:hover .action-link {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 900px) {
+            .grid-container { grid-template-columns: 1fr; gap: 24px; }
+            .header-container h1 { font-size: 2.2rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header-container">
+        <span class="badge">DRK Group of Institutions</span>
+        <h1>Online Timetable Generator</h1>
+        <p>A smart administrative platform to design, balance, and view conflict-free academic schedules instantly.</p>
+    </div>
+
+    <div class="grid-container">
+        <a href="/login/admin" class="portal-card admin-card">
+            <div class="icon-box">⚙️</div>
+            <h2>Admin Dashboard</h2>
+            <p>Configure institutional data, manage core components, and deploy automated timetable optimization constraints.</p>
+            <span class="action-link">Access Terminal &rarr;</span>
+        </a>
+
+        <a href="/login/faculty" class="portal-card faculty-card">
+            <div class="icon-box">💼</div>
+            <h2>Faculty Portal</h2>
+            <p>Access your designated teaching load schedules, track classroom assignments, and review allocated lecture blocks.</p>
+            <span class="action-link">Open Schedule &rarr;</span>
+        </a>
+
+        <a href="/login/student" class="portal-card student-card">
+            <div class="icon-box">🎓</div>
+            <h2>Student Portal</h2>
+            <p>Instantly retrieve semester timeline matrices, upcoming class blocks, and centralized weekly stream patterns.</p>
+            <span class="action-link">View Timeline &rarr;</span>
+        </a>
+    </div>
+    <div style="text-align: center; margin-top: 40px;">
+        <p style="color: #718096; font-size: 0.95rem;">
+            New administrative worker or member? 
+            <a href="/register" style="color: #3182ce; font-weight: 600; text-decoration: none; margin-left: 5px;">Create an account here &rarr;</a>
+        </p>
+    </div>
+
+</body>
+</html>
