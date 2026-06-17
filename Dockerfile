@@ -4,8 +4,8 @@ WORKDIR /app
 COPY . .
 RUN mvn clean package -DskipTests
 
-# Step 2: Run the built JAR file using a lightweight OpenJDK runtime
-FROM openjdk:17-jdk-slim
+# Step 2: Run using an official Eclipse Temurin Java runtime
+FROM eclipse-temurin:17-jre-jammy
 WORKDIR /app
 COPY --from=build /app/target/*.jar app.jar
 EXPOSE 8081
