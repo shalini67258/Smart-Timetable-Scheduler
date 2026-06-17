@@ -9,6 +9,12 @@
 
 ---
 
+## 🚀 Live Demo
+The application is fully operational and hosted live on Render! You can test the platform here:
+👉 **[Click Here to Open the Live Website](https://smart-timetable-scheduler-aqqs.onrender.com)**
+
+---
+
 ## 🚀 The Ultimate Project Vision
 **Smart Timetable Scheduler** is a high-performance, enterprise-grade academic scheduling platform designed to eliminate institutional planning stress. Driven by an intelligent **Multi-Variable Constraint Solver Engine**, the application seamlessly matches classrooms, faculty availability, and structural syllabus limits to construct 100% conflict-free master grids instantly. 
 
@@ -45,7 +51,7 @@ Users do not look through giant, confusing master charts. The system uses an **a
 ```text
   ┌────────────────────────────────────────────────────────┐
   │                 Administrative Input                   │
-  │  (Classrooms, Faculty Pools, Year-Subject Curriculum)   │
+  │  (Classrooms, Faculty Pools, Year-Subject Curriculum)  │
   └───────────────────────────┬────────────────────────────┘
                               ▼
   ┌────────────────────────────────────────────────────────┐
@@ -55,7 +61,7 @@ Users do not look through giant, confusing master charts. The system uses an **a
                               ▼
   ┌────────────────────────────────────────────────────────┐
   │         Multi-Layer Allocation Matrix Solver           │
-  │  Checks: Is Teacher Free? | Is Room Free? | Match Slot  │
+  │ Checks: Is Teacher Free? | Is Room Free? | Match Slot  │
   └───────────────────────────┬────────────────────────────┘
                               ▼
   ┌────────────────────────────────────────────────────────┐
