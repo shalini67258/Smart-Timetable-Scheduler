@@ -222,22 +222,29 @@ public class PortalController {
         return populateAdminData(adminEmail, "Classroom removed.", model);
     }
 
+  // ... (code above this line stays the same) ...
+
     @PostMapping("/admin/add-subject")
     public String addSubject(@RequestParam("subjectCode") String subjectCode, 
                              @RequestParam("subjectName") String subjectName, 
                              @RequestParam("branch") String branch, 
-                             @RequestParam("academicYear") String academicYear, 
+                             @RequestParam(value = "academicYear", defaultValue = "Not Set") String academicYear, 
                              @RequestParam("assignedTeacher") String assignedTeacher, 
                              @RequestParam("adminEmail") String adminEmail, Model model) {
+        
         Subject s = new Subject(); 
         s.setSubjectCode(subjectCode); 
         s.setSubjectName(subjectName); 
         s.setBranch(branch);
         s.setAcademicYear(academicYear); 
         s.setAssignedTeacher(assignedTeacher); 
+        
         subjectRepository.save(s);
-        return populateAdminData(adminEmail, "Subject linked successfully to " + academicYear + " (" + branch + ").", model);
+        
+        return populateAdminData(adminEmail, "Subject " + subjectName + " saved successfully.", model);
     }
+
+// ... (code below this line stays the same) ...
 
     @GetMapping("/admin/delete-subject/{id}")
     public String deleteSubject(@PathVariable("id") Long id, @RequestParam("adminEmail") String adminEmail, Model model) {
