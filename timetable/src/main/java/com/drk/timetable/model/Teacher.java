@@ -35,4 +35,9 @@ public class Teacher {
 
     public String getDepartment() { return department; }
     public void setDepartment(String department) { this.department = department; }
+    public Teacher(String name, String department, String email) {
+    this.name = name;
+    this.department = department;
+    this.email = email;
+}
 }
