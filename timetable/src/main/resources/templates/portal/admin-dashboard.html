@@ -74,25 +74,32 @@
         </div>
 
         <div id="subjects-panel" class="panel-content" style="display:none;">
-            <h2>Manage Subjects</h2>
-            <form th:action="@{/admin/add-subject}" method="POST">
-                <input type="hidden" name="adminEmail" th:value="${user?.email ?: 'admin@drk.in'}" />
-                <div class="form-group"><label>Code</label><input type="text" name="subjectCode" required></div>
-                <div class="form-group"><label>Name</label><input type="text" name="subjectName" required></div>
-                <div class="form-group"><label>Branch</label>
-                    <select name="branch" required>
-                        <option th:each="c : ${courses}" th:value="${c.courseName}" th:text="${c.courseName}"></option>
-                    </select>
-                </div>
-                <div class="form-group"><label>Faculty</label>
-                    <select name="assignedTeacher" required>
-                        <option th:each="t : ${teachers}" th:value="${t.name}" th:text="${t.name}"></option>
-                    </select>
-                </div>
-                <button type="submit" class="btn-submit">Save Subject</button>
-            </form>
+    <h2>Manage Subjects</h2>
+    <form th:action="@{/admin/add-subject}" method="POST">
+        <input type="hidden" name="adminEmail" th:value="${user?.email ?: 'admin@drk.in'}" />
+        <div class="form-group"><label>Code</label><input type="text" name="subjectCode" required></div>
+        <div class="form-group"><label>Name</label><input type="text" name="subjectName" required></div>
+        <div class="form-group"><label>Branch</label>
+            <select name="branch" required>
+                <option th:each="c : ${courses}" th:value="${c.courseName}" th:text="${c.courseName}"></option>
+            </select>
         </div>
-
+        <div class="form-group"><label>Academic Year</label>
+            <select name="academicYear" required>
+                <option value="1st Year">1st Year</option>
+                <option value="2nd Year">2nd Year</option>
+                <option value="3rd Year">3rd Year</option>
+                <option value="4th Year">4th Year</option>
+            </select>
+        </div>
+        <div class="form-group"><label>Faculty</label>
+            <select name="assignedTeacher" required>
+                <option th:each="t : ${teachers}" th:value="${t.name}" th:text="${t.name}"></option>
+            </select>
+        </div>
+        <button type="submit" class="btn-submit">Save Subject</button>
+    </form>
+</div>
         <div id="settings-panel" class="panel-content" style="display:none;">
             <h2>System Settings</h2>
             <form th:action="@{/admin/save-settings}" method="POST">
