@@ -4,127 +4,41 @@
     <meta charset="UTF-8">
     <title>Welcome, Admin - Timetable Engine Hub</title>
     <style>
-        body {
-            margin: 0; padding: 0;
-            background: radial-gradient(circle at center, #1b264f 0%, #090d22 100%);
-            color: #ffffff; font-family: 'Segoe UI', Arial, sans-serif;
-            min-height: 100vh; display: flex; flex-direction: column; align-items: center;
-        }
+        body { margin: 0; padding: 0; background: radial-gradient(circle at center, #1b264f 0%, #090d22 100%); color: #ffffff; font-family: 'Segoe UI', Arial, sans-serif; min-height: 100vh; display: flex; flex-direction: column; align-items: center; }
         .header { text-align: center; margin-top: 40px; margin-bottom: 10px; }
-        .header h1 { font-size: 2.2rem; font-weight: 600; margin: 0; letter-spacing: 1px; }
-        .logout-btn {
-            background: #e74c3c; color: white; border: none; padding: 6px 16px;
-            border-radius: 4px; font-weight: bold; cursor: pointer; margin-top: 10px; text-decoration: none; display: inline-block;
-        }
-        .grid-container {
-            display: grid; grid-template-columns: repeat(4, 220px); gap: 20px;
-            justify-content: center; margin-top: 30px; max-width: 1000px;
-        }
-        .grid-card {
-            background: rgba(255, 255, 255, 0.08);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            border-radius: 12px; height: 110px; display: flex; align-items: center;
-            justify-content: center; font-weight: 600; font-size: 0.95rem;
-            cursor: pointer; transition: all 0.2s ease-in-out; text-align: center; padding: 10px; box-sizing: border-box;
-        }
-        .grid-card:hover {
-            background: linear-gradient(135deg, #3498db 0%, #9b59b6 100%);
-            transform: scale(1.04); box-shadow: 0 0 15px rgba(52, 152, 219, 0.4);
-        }
-        .workspace-section {
-            width: 90%; max-width: 940px; background: rgba(255, 255, 255, 0.98);
-            color: #2c3e50; border-radius: 16px; padding: 25px; margin-top: 40px; margin-bottom: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-        }
+        .logout-btn { background: #e74c3c; color: white; border: none; padding: 6px 16px; border-radius: 4px; font-weight: bold; cursor: pointer; text-decoration: none; display: inline-block; }
+        .grid-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; justify-content: center; margin-top: 30px; max-width: 1000px; padding: 0 20px; }
+        .grid-card { background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 12px; height: 100px; display: flex; align-items: center; justify-content: center; font-weight: 600; cursor: pointer; transition: 0.3s; text-align: center; padding: 10px; }
+        .grid-card:hover { background: linear-gradient(135deg, #3498db 0%, #9b59b6 100%); transform: translateY(-5px); }
+        .workspace-section { width: 90%; max-width: 940px; background: #ffffff; color: #2c3e50; border-radius: 16px; padding: 30px; margin: 40px 0; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
         .form-group { margin-bottom: 15px; }
-        label { display: block; font-weight: bold; margin-bottom: 6px; font-size: 14px; color: #34495e; }
-        input, select, textarea { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; font-size: 14px; font-family: inherit; }
-        .btn-submit { background: #2c3e50; color: white; border: none; padding: 12px 24px; font-weight: bold; border-radius: 6px; cursor: pointer; width: 100%; margin-top: 10px; font-size: 15px; }
-        .btn-submit:hover { background: #34495e; }
-        table { width: 100%; border-collapse: collapse; margin-top: 15px; background: white; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        label { display: block; font-weight: bold; margin-bottom: 6px; font-size: 14px; }
+        input, select, textarea { width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; box-sizing: border-box; }
+        .btn-submit { background: #2c3e50; color: white; border: none; padding: 12px; font-weight: bold; border-radius: 8px; cursor: pointer; width: 100%; margin-top: 10px; }
+        .btn-submit:hover { background: #1a252f; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
         th, td { border: 1px solid #e2e8f0; padding: 12px; text-align: left; }
-        th { background: #f8fafc; font-weight: bold; color: #4a5568; }
-        .delete-link { color: #c0392b; font-weight: bold; text-decoration: none; }
-        .delete-link:hover { text-decoration: underline; }
-        .alert-banner { color: #27ae60; background: #d4efdf; padding: 12px; border-radius: 6px; margin-bottom: 20px; font-weight: 500; text-align: center; }
-
-        /* Modern Generation & Modal Layout Styling */
-        .premium-gen-card {
-            background: linear-gradient(135deg, #1e1b4b 0%, #311042 100%);
-            color: white; border-radius: 16px; padding: 40px; text-align: center;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.25);
-        }
-        .btn-premium-trigger {
-            background: linear-gradient(135deg, #00b4db 0%, #0083b0 100%);
-            color: white; font-size: 1.1rem; font-weight: bold; padding: 16px 40px;
-            border: none; border-radius: 50px; cursor: pointer; transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(0, 180, 219, 0.4); display: inline-block; text-decoration: none;
-        }
-        .btn-premium-trigger:hover {
-            transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0, 180, 219, 0.6);
-        }
-        .btn-danger-wipe {
-            background: #ef4444; color: white; padding: 12px 24px; border: none;
-            border-radius: 6px; font-weight: bold; cursor: pointer; transition: background 0.2s;
-        }
-        .btn-danger-wipe:hover { background: #dc2626; }
-        
-        .modal-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(15, 23, 42, 0.85); display: flex; align-items: center;
-            justify-content: center; z-index: 1000; opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
-        }
-        .modal-overlay.active { opacity: 1; pointer-events: auto; }
-        .modal-box {
-            background: white; color: #1e293b; padding: 35px; border-radius: 16px;
-            max-width: 450px; width: 90%; text-align: center; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.3);
-        }
-        .modal-icon { font-size: 3.5rem; color: #10b981; margin-bottom: 15px; }
-        .btn-modal-close {
-            background: #1e293b; color: white; border: none; padding: 10px 24px;
-            font-weight: bold; border-radius: 6px; cursor: pointer; margin-top: 15px;
-        }
+        th { background: #f8fafc; }
+        .delete-link { color: #e74c3c; font-weight: bold; text-decoration: none; }
+        .alert-banner { color: #155724; background: #d4edda; padding: 15px; border-radius: 8px; margin-bottom: 20px; text-align: center; border: 1px solid #c3e6cb; }
     </style>
     <script>
         function showPanel(panelId) {
             document.querySelectorAll('.panel-content').forEach(p => p.style.display = 'none');
-            document.getElementById(panelId).style.display = 'block';
-            document.getElementById('workspace').scrollIntoView({ behavior: 'smooth' });
-            
-            localStorage.setItem("activeTimetablePanel", panelId);
+            const target = document.getElementById(panelId);
+            if(target) { target.style.display = 'block'; localStorage.setItem("activeTimetablePanel", panelId); }
         }
-
-        function triggerSuccessModal() {
-            document.getElementById('successModal').classList.add('active');
-        }
-
-        function closeSuccessModal() {
-            document.getElementById('successModal').classList.remove('active');
-        }
-
-        window.onload = function() {
-            const savedPanel = localStorage.getItem("activeTimetablePanel");
-            if (savedPanel) {
-                showPanel(savedPanel);
-            } else {
-                showPanel('faculty-panel');
-            }
-
-            const alertBanner = document.querySelector('.alert-banner');
-            if (alertBanner) {
-                const text = alertBanner.innerText;
-                if (text.includes('TIMETABLE_COMPILED')) {
-                    alertBanner.innerText = "Automated timetable engine completed run successfully across all active student groups!";
-                    triggerSuccessModal();
-                }
-            }
+        window.onload = () => {
+            const savedPanel = localStorage.getItem("activeTimetablePanel") || 'faculty-panel';
+            showPanel(savedPanel);
         }
     </script>
 </head>
 <body>
 
     <div class="header">
-        <h1 th:text="'Welcome, ' + ${user != null && user.fullName != null ? user.fullName : 'Admin'}">Welcome, Admin</h1>
-        <a href="/" class="logout-btn">Logout Matrix</a>
+        <h1 th:text="'Welcome, ' + (${user != null} ? ${user.fullName} : 'Admin')">Welcome</h1>
+        <a href="/" class="logout-btn">Logout</a>
     </div>
 
     <div class="grid-container">
@@ -133,366 +47,85 @@
         <div class="grid-card" onclick="showPanel('manual-panel')">Manual Entry</div>
         <div class="grid-card" onclick="showPanel('view-panel')">View Timetable</div>
         <div class="grid-card" onclick="showPanel('classroom-panel')">Add Classrooms</div>
-        <div class="grid-card" onclick="showPanel('courses-panel')">Manage Courses</div>
-        <div class="grid-card" onclick="showPanel('settings-panel')">Settings</div>
+        <div class="grid-card" onclick="showPanel('settings-panel')">Settings & Mapping</div>
         <div class="grid-card" onclick="showPanel('generate-panel')">Generate Timetable</div>
     </div>
 
     <div id="workspace" class="workspace-section">
-        
         <div class="alert-banner" th:if="${statusMsg != null}" th:text="${statusMsg}"></div>
 
         <div id="faculty-panel" class="panel-content">
-            <h2>Faculty Registry Management</h2>
+            <h2>Faculty Registry</h2>
             <form action="/admin/add-teacher" method="POST">
-                <input type="hidden" name="adminEmail" th:value="${user != null && user.email != null ? user.email : 'admin@drk.in'}">
-                <input type="hidden" name="department" value="GLOBAL_POOL">
-                <div class="form-group"><label>Teacher Full Name</label><input type="text" name="name" required placeholder="Dr. Sarah Jenkins"></div>
-                <div class="form-group"><label>Email Profile Address</label><input type="email" name="email" required placeholder="sarah@drk.in"></div>
-                <button type="submit" class="btn-submit">Add Faculty Member</button>
+                <input type="hidden" name="adminEmail" th:value="${user?.email ?: 'admin@drk.in'}">
+                <div class="form-group"><label>Name</label><input type="text" name="name" required></div>
+                <div class="form-group"><label>Email</label><input type="email" name="email" required></div>
+                <button type="submit" class="btn-submit">Add Member</button>
             </form>
             <table>
-                <thead><tr><th>Name</th><th>Email Address</th><th>Action</th></tr></thead>
+                <thead><tr><th>Name</th><th>Email</th><th>Action</th></tr></thead>
                 <tbody>
-                    <tr th:if="${teachers == null || teachers.isEmpty()}"><td colspan="3" style="text-align:center; color:#7f8c8d;">No Faculty Registered.</td></tr>
                     <tr th:each="t : ${teachers}">
                         <td th:text="${t.name}"></td><td th:text="${t.email}"></td>
-                        <td><a class="delete-link" th:href="@{/admin/delete-teacher/{id}(id=${t.id}, adminEmail=${user != null && user.email != null ? user.email : 'admin@drk.in'})}">Delete</a></td>
+                        <td><a class="delete-link" th:href="@{/admin/delete-teacher/{id}(id=${t.id}, adminEmail=${user?.email ?: 'admin@drk.in'})}">Delete</a></td>
                     </tr>
                 </tbody>
             </table>
         </div>
 
         <div id="subjects-panel" class="panel-content" style="display:none;">
-            <h2>Curriculum Subject Setup (Global Pool)</h2>
+            <h2>Manage Subjects</h2>
             <form th:action="@{/admin/add-subject}" method="POST">
-                <input type="hidden" name="adminEmail" th:value="${user != null && user.email != null ? user.email : 'admin@drk.in'}" />
-
-                <div class="form-group">
-                    <label>Subject Code:</label>
-                    <input type="text" name="subjectCode" placeholder="e.g., CS301" required />
-                </div>
-
-                <div class="form-group">
-                    <label>Subject Name:</label>
-                    <input type="text" name="subjectName" placeholder="e.g., Software Engineering" required />
-                </div>
-
-                <div class="form-group">
-                    <label>Branch / Degree Track:</label>
+                <input type="hidden" name="adminEmail" th:value="${user?.email ?: 'admin@drk.in'}" />
+                <div class="form-group"><label>Code</label><input type="text" name="subjectCode" required></div>
+                <div class="form-group"><label>Name</label><input type="text" name="subjectName" required></div>
+                <div class="form-group"><label>Branch</label>
                     <select name="branch" required>
-                        <option value="">-- Select Stream --</option>
                         <option th:each="c : ${courses}" th:value="${c.courseName}" th:text="${c.courseName}"></option>
                     </select>
                 </div>
-
-                <div class="form-group">
-                    <label>Academic Year:</label>
-                    <select name="academicYear" required>
-                        <option value="">-- Select Year --</option>
-                        <option value="1st Year">1st Year</option>
-                        <option value="2nd Year">2nd Year</option>
-                        <option value="3rd Year">3rd Year</option>
-                        <option value="4th Year">4th Year</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label>Assign Faculty Teacher:</label>
+                <div class="form-group"><label>Faculty</label>
                     <select name="assignedTeacher" required>
-                        <option value="">-- Select Instructor --</option>
                         <option th:each="t : ${teachers}" th:value="${t.name}" th:text="${t.name}"></option>
                     </select>
                 </div>
-
-                <button type="submit" class="btn-submit">Save Global Subject</button>
+                <button type="submit" class="btn-submit">Save Subject</button>
             </form>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Code</th>
-                        <th>Subject Name</th>
-                        <th>Branch</th>
-                        <th>Assigned Faculty Pool</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr th:if="${subjects == null || subjects.isEmpty()}"><td colspan="5" style="text-align:center; color:#7f8c8d;">No Subjects Registered.</td></tr>
-                    <tr th:each="s : ${subjects}">
-                        <td th:text="${s.subjectCode}"></td>
-                        <td th:text="${s.subjectName}"></td>
-                        <td th:text="${s.branch != null ? s.branch : 'Global Stream'}" style="font-weight: 500; color: #2980b9;"></td>
-                        <td th:text="${s.assignedTeacher != null ? s.assignedTeacher : 'Unassigned'}" style="font-weight: 600; color: #16a085;"></td>
-                        <td><a class="delete-link" th:href="@{/admin/delete-subject/{id}(id=${s.id}, adminEmail=${user != null && user.email != null ? user.email : 'admin@drk.in'})}">Delete</a></td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-        <div id="manual-panel" class="panel-content" style="display:none;">
-            <h2>Manual Scheduling Override Input</h2>
-            <form action="/admin/manual-assign" method="POST" style="background: #f8fafc; padding: 20px; border-radius: 8px;">
-                <input type="hidden" name="adminEmail" th:value="${user != null && user.email != null ? user.email : 'admin@drk.in'}">
-                
-                <div class="form-group"><label>Academic Year</label>
-                    <select name="year" required>
-                        <option value="">-- Select Year --</option>
-                        <option value="1st Year">1st Year</option>
-                        <option value="2nd Year">2nd Year</option>
-                        <option value="3rd Year">3rd Year</option>
-                        <option value="4th Year">4th Year</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label>Branch / Course Track</label>
-                    <select name="branch" required>
-                        <option value="">-- Select Target Course Group --</option>
-                        <option th:each="sec : ${sections}" th:value="${sec}" th:text="${sec}"></option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label>Active Group Section Mapping</label>
-                    <select name="section" required>
-                        <option value="">-- Select Target Section Slot --</option>
-                        <option th:each="sec : ${sections}" th:value="${sec}" th:text="${sec}"></option>
-                    </select>
-                </div>
-
-                <div class="form-group"><label>Day of Week</label>
-                    <select name="day" required>
-                        <option value="">-- Select Day --</option>
-                        <option value="Monday">Monday</option>
-                        <option value="Tuesday">Tuesday</option>
-                        <option value="Wednesday">Wednesday</option>
-                        <option value="Thursday">Thursday</option>
-                        <option value="Friday">Friday</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label>Time Hour Block Slot</label>
-                    <input type="text" name="timeSlot" placeholder="e.g., 09:20 - 10:10" required>
-                </div>
-
-                <div class="form-group"><label>Select Professor</label>
-                    <select name="teacher" required>
-                        <option value="">-- Select Instructor --</option>
-                        <option th:each="t : ${teachers}" th:value="${t.name}" th:text="${t.name}"></option>
-                    </select>
-                </div>
-
-                <div class="form-group"><label>Select Subject</label>
-                    <select name="subject" required>
-                        <option value="">-- Select Subject --</option>
-                        <option th:each="s : ${subjects}" th:value="${s.subjectName}" th:text="${s.subjectName}"></option>
-                    </select>
-                </div>
-
-                <div class="form-group"><label>Select Classroom Hall</label>
-                    <select name="room" required>
-                        <option value="">-- Select Classroom --</option>
-                        <option th:each="c : ${classrooms}" th:value="${c.roomNumber}" th:text="${c.roomNumber}"></option>
-                    </select>
-                </div>
-
-                <button type="submit" class="btn-submit">Apply Manual Override Entry</button>
-            </form>
-        </div>
-        
-        <div id="view-panel" class="panel-content" style="display:none;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                <h2>Master Timetable Matrix Layout</h2>
-                <form th:action="@{/admin/clear-timetable}" method="POST" onsubmit="return confirm('CRITICAL ACTION WARNING: Are you sure you want to completely clear the entire active timetable footprint?');">
-                    <input type="hidden" name="adminEmail" th:value="${user != null && user.email != null ? user.email : 'admin@drk.in'}" />
-                    <button type="submit" class="btn-danger-wipe">🗑️ Clear Complete Timetable</button>
-                </form>
-            </div>
-
-            <p th:if="${masterSchedules == null || masterSchedules.isEmpty()}" style="color: #e74c3c; font-weight: bold; text-align: center; padding: 20px; background: #fadbd8; border-radius: 6px;">
-                [NO ACTIVE DATA PROFILE AVAILABLE: Run the automatic compilation scheduling system engine branch panel first!]
-            </p>
-            
-            <table th:if="${masterSchedules != null && !masterSchedules.isEmpty()}">
-                <thead>
-                    <tr style="background-color: #2c3e50; color: white;">
-                        <th>Year Track</th>
-                        <th>Section Mapped</th>
-                        <th>Day of Week</th>
-                        <th>Calculated Time Slot</th>
-                        <th>Allocated Resource Elements</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr th:each="entry : ${masterSchedules}">
-                        <td th:text="${entry.academicYear}" style="font-weight: bold; color: #7f8c8d;"></td>
-                        <td th:text="${entry.sectionName}" style="font-weight: bold; color: #2980b9; background: #fdfefe;"></td>
-                        <td th:text="${entry.dayOfWeek}" style="font-weight: 500;"></td>
-                        <td th:text="${entry.timeSlot}" style="color: #2c3e50; font-size: 13px; font-weight: bold;"></td>
-                        <td>
-                            <div style="font-weight: 600; color: #2c3e50;" th:text="${entry.subjectName}"></div>
-                            <div style="font-size: 12px; color: #16a085; font-weight: 500;" th:text="'Prof. ' + ${entry.teacherName} + ' (Room: ' + ${entry.roomNumber} + ')'"></div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-        <div id="classroom-panel" class="panel-content" style="display:none;">
-            <h2>Classroom Registry Hub</h2>
-            <form action="/admin/add-classroom" method="POST">
-                <input type="hidden" name="adminEmail" th:value="${user != null && user.email != null ? user.email : 'admin@drk.in'}">
-                <div class="form-group"><label>Room Number / Hall Identifier</label><input type="text" name="roomNumber" required placeholder="L-302"></div>
-                <div class="form-group"><label>Seating Desk Capacity</label><input type="number" name="capacity" required placeholder="60"></div>
-                <button type="submit" class="btn-submit">Save Lecture Room Space</button>
-            </form>
-            <table>
-                <thead><tr><th>Room Number</th><th>Capacity Slot</th><th>Action</th></tr></thead>
-                <tbody>
-                    <tr th:if="${classrooms == null || classrooms.isEmpty()}"><td colspan="3" style="text-align:center; color:#7f8c8d;">No Classrooms Registered.</td></tr>
-                    <tr th:each="c : ${classrooms}">
-                        <td th:text="${c.roomNumber}" style="font-weight: 600;"></td><td th:text="${c.capacity} + ' Seats'"></td>
-                        <td><a class="delete-link" th:href="@{/admin/delete-classroom/{id}(id=${c.id}, adminEmail=${user != null && user.email != null ? user.email : 'admin@drk.in'})}">Delete</a></td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-        <div id="courses-panel" class="panel-content" style="display:none;">
-            <h2>Course Degree Track Settings</h2>
-            <form action="/admin/add-course" method="POST">
-                <input type="hidden" name="adminEmail" th:value="${user != null && user.email != null ? user.email : 'admin@drk.in'}">
-                <div class="form-group"><label>Course Track Title (Branch Prefix)</label><input type="text" name="courseName" required placeholder="e.g., CSE, MECH, MBA"></div>
-                <div class="form-group"><label>Active Group Section Target Configurations</label><input type="text" name="durationYears" required placeholder="1st Yr: A,B,C | 2nd Yr: A,B"></div>
-                <button type="submit" class="btn-submit">Add Course Track</button>
-            </form>
-            <table>
-                <thead><tr><th>Course Track Name</th><th>Active Year-Section Tranches</th><th>Action</th></tr></thead>
-                <tbody>
-                    <tr th:if="${courses == null || courses.isEmpty()}"><td colspan="3" style="text-align:center; color:#7f8c8d;">No Degree Streams Tracked.</td></tr>
-                    <tr th:each="crs : ${courses}">
-                        <td th:text="${crs.courseName}" style="font-weight: 500;"></td><td th:text="${crs.durationYears}"></td>
-                        <td><a class="delete-link" th:href="@{/admin/delete-course/{id}(id=${crs.id}, adminEmail=${user != null && user.email != null ? user.email : 'admin@drk.in'})}">Delete</a></td>
-                    </tr>
-                </tbody>
-            </table>
         </div>
 
         <div id="settings-panel" class="panel-content" style="display:none;">
-            <h2>System Parameters Matrix Setup</h2>
+            <h2>System Settings</h2>
             <form th:action="@{/admin/save-settings}" method="POST">
-                <input type="hidden" name="adminEmail" th:value="${user != null && user.email != null ? user.email : 'admin@drk.in'}" />
-                
-                <div class="form-group"><label>Start Time:</label><input type="text" name="startTime" value="09:20" required /></div>
-                <div class="form-group"><label>Period Duration (Minutes):</label><input type="number" name="duration" value="50" required /></div>
-                <div class="form-group"><label>Short Break Duration Interval (Minutes):</label><input type="number" name="shortBreak" value="10" required /></div>
-                <div class="form-group"><label>Lunch Break (Minutes):</label><input type="number" name="lunchBreak" value="40" required /></div>
-                <div class="form-group">
-                    <label>Configured Active Sections (Comma Separated Matrix List):</label>
-                    <textarea name="sections" rows="3" required>CSE-A,CSE-B,CSE-C,MECH-A,MECH-B,CSD-A,CSC-A,ECE-A,ECE-B,MBA</textarea>
+                <input type="hidden" name="adminEmail" th:value="${user?.email ?: 'admin@drk.in'}" />
+                <div class="form-group"><label>Sections (comma separated):</label>
+                    <textarea name="sections" th:text="${#strings.listJoin(sections, ',')}" required></textarea>
                 </div>
-                <div class="form-group"><label>Working Days:</label><input type="text" name="days" value="Monday,Tuesday,Wednesday,Thursday,Friday" required /></div>
-                <button type="submit" class="btn-submit" style="background: #2980b9;">Commit Settings to PostgreSQL</button>
+                <button type="submit" class="btn-submit">Update System</button>
             </form>
 
-            <hr style="border: 0; height: 1px; background: #cbd5e1; margin: 40px 0;" />
+            <hr>
 
-            <div style="display: grid; grid-template-columns: 1fr 1.2fr; gap: 30px; margin-top: 20px;">
-                
-                <div style="background: #f8fafc; padding: 24px; border-radius: 12px; border: 1px solid #cbd5e1; color: #2c3e50;">
-                    <h3 style="margin-top: 0; color: #2c3e50;">Map Subject to Academic Year</h3>
-                    <p style="font-size: 13px; color: #7f8c8d; margin-bottom: 20px;">Link global subjects to targeted academic timeline slots manually.</p>
-                    
-                    <form th:action="@{/admin/map-year-subject}" method="POST">
-                        <input type="hidden" name="adminEmail" th:value="${user != null && user.email != null ? user.email : 'admin@drk.in'}" />
-                        
-                        <div class="form-group">
-                            <label>Target Academic Year</label>
-                            <select name="academicYear" required style="border: 1px solid #ccc;">
-                                <option value="">-- Select Year Tier --</option>
-                                <option value="1st Year">1st Year</option>
-                                <option value="2nd Year">2nd Year</option>
-                                <option value="3rd Year">3rd Year</option>
-                                <option value="4th Year">4th Year</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label>Select Global Subject</label>
-                            <select name="subjectId" required style="border: 1px solid #ccc;">
-                                <option value="">-- Select Subject (Binds Faculty) --</option>
-                                <option th:each="s : ${subjects}" 
-                                        th:value="${s.id}" 
-                                        th:text="${s.subjectName} + ' [' + ${s.subjectCode} + '] - ' + ${s.assignedTeacher}">
-                                </option>
-                            </select>
-                        </div>
-
-                        <button type="submit" class="btn-submit" style="background: #10b981;">Confirm Curriculum Allocation</button>
-                    </form>
-                </div>
-
-                <div style="color: #2c3e50;">
-                    <h3 style="margin-top: 0; color: #2c3e50;">Active Structural Matrix</h3>
-                    <p style="font-size: 13px; color: #7f8c8d; margin-bottom: 15px;">Live configurations impacted downstream to active registration views.</p>
-                    
-                    <div style="max-height: 380px; overflow-y: auto; border: 1px solid #cbd5e1; border-radius: 8px; background: white;">
-                        <table style="margin-top: 0; width: 100%;">
-                            <thead style="position: sticky; top: 0; z-index: 10;">
-                                <tr>
-                                    <th>Year Tier</th>
-                                    <th>Subject (Faculty Bound)</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr th:if="${yearMappings == null || yearMappings.isEmpty()}">
-                                    <td colspan="3" style="text-align:center; color:#7f8c8d; padding: 30px;">No maps committed yet. Everything sits in global pool storage.</td>
-                                </tr>
-                                <tr th:each="map : ${yearMappings}">
-                                    <td th:text="${map.academicYear}" style="font-weight: bold; color: #2980b9;"></td>
-                                    <td>
-                                        <div th:text="${map.subjectName}" style="font-weight: 600;"></div>
-                                        <div th:text="'Prof. ' + ${map.teacherName}" style="font-size: 12px; color: #16a085;"></div>
-                                    </td>
-                                    <td>
-                                        <a class="delete-link" th:href="@{/admin/delete-mapping/{id}(id=${map.id}, adminEmail=${user != null && user.email != null ? user.email : 'admin@drk.in'})}">Drop</a>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
+            <h3>Map Subject to Academic Year</h3>
+            <form th:action="@{/admin/map-year-subject}" method="POST">
+                <input type="hidden" name="adminEmail" th:value="${user?.email ?: 'admin@drk.in'}" />
+                <select name="academicYear" required>
+                    <option value="1st Year">1st Year</option>
+                    <option value="2nd Year">2nd Year</option>
+                </select>
+                <select name="subjectId" required>
+                    <option th:each="s : ${subjects}" th:value="${s.id}" th:text="${s.subjectName}"></option>
+                </select>
+                <button type="submit" class="btn-submit">Assign Mapping</button>
+            </form>
         </div>
 
-        <div id="generate-panel" class="panel-content" style="display:none;">
-            <div class="premium-gen-card">
-                <h2 style="color: #00b4db; margin-top: 0;">Automated Core Scheduling Engine</h2>
-                <p style="font-size: 15px; opacity: 0.85; max-width: 600px; margin: 0 auto 30px auto; line-height: 1.6;">
-                    Executing the compiler resets active schedule footprints and maps infrastructure elements onto fresh timeline tracks. All subject parameters will dynamically distribute over open resource grids.
-                </p>
-                <form action="/admin/run-compiler" method="POST">
-                    <input type="hidden" name="adminEmail" th:value="${user != null && user.email != null ? user.email : 'admin@drk.in'}">
-                    <button type="submit" class="btn-premium-trigger">
-                        ⚡ Execute Automatic Generation Run
-                    </button>
-                </form>
-            </div>
+        <div id="generate-panel" class="panel-content" style="display:none; text-align:center;">
+            <h2>Generate Timetable</h2>
+            <form action="/admin/run-compiler" method="POST">
+                <input type="hidden" name="adminEmail" th:value="${user?.email ?: 'admin@drk.in'}">
+                <button type="submit" class="btn-submit" style="background: #10b981; font-size: 18px;">Execute Engine</button>
+            </form>
         </div>
     </div>
-
-    <!-- Success Modal -->
-    <div id="successModal" class="modal-overlay">
-        <div class="modal-box">
-            <div class="modal-icon">✅</div>
-            <h2>Compilation Success</h2>
-            <p>The automated timetable engine has completed the run successfully.</p>
-            <button class="btn-modal-close" onclick="closeSuccessModal()">Dismiss</button>
-        </div>
-    </div>
-
 </body>
 </html>
