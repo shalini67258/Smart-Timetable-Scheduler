@@ -3,15 +3,9 @@ package com.drk.timetable.controller;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-
+import org.springframework.web.bind.annotation.*;
 import com.drk.timetable.model.*;
 import com.drk.timetable.repository.*;
 import com.drk.timetable.service.TimetableService;
@@ -46,145 +40,48 @@ public class PortalController {
         this.yearSubjectMappingRepository = yearSubjectMappingRepository;
     }
 
-    @GetMapping("/")
-    public String showLandingPage() { return "portal/index"; }
-
-    @GetMapping("/login/{role}")
-    public String showLoginPage(@PathVariable("role") String role, Model model) {
-        model.addAttribute("role", role != null ? role.toUpperCase() : "USER");
-        return "portal/login";
-    }
-
-    @GetMapping("/register")
-    public String showRegisterPage(Model model) {
-        model.addAttribute("user", new User());
-        model.addAttribute("dynamicBranches", courseRepository.findAll()); 
-        model.addAttribute("sections", getDynamicSectionsFromSettings());
-        return "portal/register";
-    }
-
-    @PostMapping("/register/process")
-    public String handleRegistration(@ModelAttribute("user") User user, 
-                                     @RequestParam(value = "branch", required = false) String branch,
-                                     @RequestParam(value = "academicYear", required = false) String year,
-                                     @RequestParam(value = "sectionName", required = false) String sectionName, Model model) {
-        
-        if ("FACULTY".equalsIgnoreCase(user.getRole())) {
-            Optional<Teacher> whitelistedTeacher = teacherRepository.findAll().stream()
-                .filter(t -> t.getEmail() != null && t.getEmail().equalsIgnoreCase(user.getEmail().trim()))
-                .findFirst();
-                
-            if (whitelistedTeacher.isEmpty()) {
-                model.addAttribute("dynamicBranches", courseRepository.findAll());
-                model.addAttribute("sections", getDynamicSectionsFromSettings());
-                model.addAttribute("errorMsg", "Registration Denied! Your email is not whitelisted by Admin.");
-                return "portal/register";
-            }
-            user.setFullName(whitelistedTeacher.get().getName());
-        } else if ("STUDENT".equalsIgnoreCase(user.getRole())) {
-            user.setBranch(branch);
-            user.setAcademicYear(year);
-            user.setSectionName(sectionName); 
-        }
-        
-        if (userService.registerUser(user)) {
-            model.addAttribute("successMsg", "Registration successful! Proceed to Login.");
-            return "portal/login"; 
-        } else {
-            model.addAttribute("errorMsg", "An account with this email already exists!");
-            return "portal/register";
-        }
-    }
-
-    @PostMapping("/login/process")
-    public String handleLogin(@RequestParam("email") String email, @RequestParam("password") String password, Model model) {
-        Optional<User> loggedInUser = userService.loginUser(email, password);
-        
-        if (loggedInUser.isPresent()) {
-            User user = loggedInUser.get();
-            if ("ADMIN".equalsIgnoreCase(user.getRole())) return populateAdminData(user.getEmail(), null, model);
-            
-            model.addAttribute("user", user);
-            if ("FACULTY".equalsIgnoreCase(user.getRole())) {
-                List<TimetableEntry> sched = timetableEntryRepository.findByTeacherName(user.getFullName());
-                model.addAttribute("mySchedule", sched);
-                return "portal/faculty-dashboard";
-            } else {
-                model.addAttribute("mySchedule", timetableEntryRepository.findByAcademicYearAndBranchAndSectionName(
-                        user.getAcademicYear(), user.getBranch(), user.getSectionName()));
-                return "portal/student-dashboard";
-            }
-        }
-        model.addAttribute("errorMsg", "Invalid Credentials!");
-        return "portal/login";
-    }
-
-    // --- ADMIN ROUTES ---
-
-    @PostMapping("/admin/run-compiler")
-    public String runAutoCompiler(@RequestParam("adminEmail") String adminEmail, Model model) {
-        return populateAdminData(adminEmail, timetableService.generateAutomaticTimetable(), model);
-    }
-
-    @PostMapping("/admin/clear-timetable")
-    public String clearCompleteTimetable(@RequestParam("adminEmail") String adminEmail, Model model) {
-        timetableEntryRepository.deleteAll();
-        return populateAdminData(adminEmail, "Timetable wiped.", model);
-    }
-
-    @PostMapping("/admin/manual-assign")
-    public String saveManualOverride(@RequestParam String year, @RequestParam String branch, @RequestParam String section,
-                                     @RequestParam String day, @RequestParam String timeSlot, @RequestParam String teacher,
-                                     @RequestParam String subject, @RequestParam String room, @RequestParam String adminEmail, Model model) {
-        timetableEntryRepository.save(new TimetableEntry(year, branch, section, day, timeSlot, teacher, subject, room, "MANUAL"));
-        return populateAdminData(adminEmail, "Manual Entry Saved.", model);
-    }
-
-    // --- DATA MANAGEMENT ---
+    @GetMapping("/") public String showLandingPage() { return "portal/index"; }
 
     @PostMapping("/admin/add-teacher")
     public String addTeacher(@RequestParam String name, @RequestParam String department, @RequestParam String email, @RequestParam String adminEmail, Model model) {
         teacherRepository.save(new Teacher(name, department, email));
-        return populateAdminData(adminEmail, "Faculty added.", model);
+        return populateAdminData(adminEmail, "Teacher added.", model);
+    }
+
+    @GetMapping("/admin/delete-teacher/{id}")
+    public String delT(@PathVariable Long id, @RequestParam String adminEmail, Model model) {
+        teacherRepository.deleteById(id); return populateAdminData(adminEmail, "Deleted.", model);
     }
 
     @PostMapping("/admin/add-classroom")
-    public String addClassroom(@RequestParam String roomNumber, @RequestParam int capacity, @RequestParam String adminEmail, Model model) {
+    public String addCR(@RequestParam String roomNumber, @RequestParam int capacity, @RequestParam String adminEmail, Model model) {
         classroomRepository.save(new Classroom(roomNumber, capacity));
         return populateAdminData(adminEmail, "Classroom added.", model);
     }
 
+    @GetMapping("/admin/delete-classroom/{id}")
+    public String delCR(@PathVariable Long id, @RequestParam String adminEmail, Model model) {
+        classroomRepository.deleteById(id); return populateAdminData(adminEmail, "Deleted.", model);
+    }
+
     @PostMapping("/admin/add-subject")
-    public String addSubject(@RequestParam String subjectCode, @RequestParam String subjectName, @RequestParam String branch, 
+    public String addSub(@RequestParam String subjectCode, @RequestParam String subjectName, @RequestParam String branch, 
                              @RequestParam String academicYear, @RequestParam String assignedTeacher, @RequestParam String adminEmail, Model model) {
         subjectRepository.save(new Subject(subjectCode, subjectName, branch, academicYear, assignedTeacher));
         return populateAdminData(adminEmail, "Subject added.", model);
     }
 
-    @PostMapping("/admin/save-settings")
-    public String saveSystemSettings(@RequestParam String startTime, @RequestParam String duration, @RequestParam String shortBreak, 
-                                     @RequestParam String lunchBreak, @RequestParam String sections, @RequestParam String days, 
-                                     @RequestParam String adminEmail, Model model) {
-        appSettingRepository.save(new AppSetting("START_TIME", startTime));
-        appSettingRepository.save(new AppSetting("PERIOD_DURATION", duration));
-        appSettingRepository.save(new AppSetting("SHORT_BREAK", shortBreak));
-        appSettingRepository.save(new AppSetting("LUNCH_BREAK", lunchBreak));
-        appSettingRepository.save(new AppSetting("SECTIONS", sections));
-        appSettingRepository.save(new AppSetting("WORKING_DAYS", days));
-        return populateAdminData(adminEmail, "Settings updated.", model);
+    @GetMapping("/admin/delete-subject/{id}")
+    public String delSub(@PathVariable Long id, @RequestParam String adminEmail, Model model) {
+        subjectRepository.deleteById(id); return populateAdminData(adminEmail, "Deleted.", model);
     }
 
-    // --- HELPER METHODS ---
-
-    private String populateAdminData(String email, String message, Model model) {
+    private String populateAdminData(String email, String msg, Model model) {
         model.addAttribute("user", new User("Admin", email, "ADMIN", ""));
-        model.addAttribute("courses", courseRepository.findAll());
         model.addAttribute("teachers", teacherRepository.findAll());
         model.addAttribute("subjects", subjectRepository.findAll());
         model.addAttribute("classrooms", classroomRepository.findAll());
-        model.addAttribute("masterSchedules", timetableEntryRepository.findAll());
-        model.addAttribute("yearMappings", yearSubjectMappingRepository.findAll());
-        model.addAttribute("statusMsg", message);
+        model.addAttribute("statusMsg", msg);
         model.addAttribute("sections", getDynamicSectionsFromSettings());
         return "portal/admin-dashboard";
     }
@@ -195,6 +92,4 @@ public class PortalController {
         for (String s : raw.split(",")) if (!s.isBlank()) list.add(s.trim());
         return list;
     }
-    
-    // (Ensure you also include the specific @GetMapping delete methods for entities as you had previously)
 }
