@@ -2,12 +2,9 @@ package com.drk.timetable.controller;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
 import com.drk.timetable.model.*;
 import com.drk.timetable.repository.*;
 import com.drk.timetable.service.*;
@@ -41,8 +38,6 @@ public class PortalController {
         this.yearSubjectMappingRepository = yearSubjectMappingRepository;
     }
 
-    // --- DASHBOARD & UTILITIES ---
-
     private String populateAdminData(String email, String message, Model model) {
         User adminUser = new User("System Administrator", email != null ? email : "admin@drk.in", "ADMIN", "");
         model.addAttribute("user", adminUser);
@@ -63,8 +58,25 @@ public class PortalController {
                 .orElse(List.of("CSE-A", "CSE-B", "MECH-A"));
     }
 
-    // --- DELETE MAPPINGS (FIXED 404s) ---
+    // --- ADDING SUBJECTS ---
+    @PostMapping("/admin/add-subject")
+    public String addSubject(@RequestParam("subjectCode") String subjectCode, 
+                             @RequestParam("subjectName") String subjectName, 
+                             @RequestParam("branch") String branch, 
+                             @RequestParam("academicYear") String academicYear, 
+                             @RequestParam("assignedTeacher") String assignedTeacher, 
+                             @RequestParam("adminEmail") String adminEmail, Model model) {
+        Subject s = new Subject(); 
+        s.setSubjectCode(subjectCode); 
+        s.setSubjectName(subjectName); 
+        s.setBranch(branch);
+        s.setAcademicYear(academicYear);
+        s.setAssignedTeacher(assignedTeacher); 
+        subjectRepository.save(s);
+        return populateAdminData(adminEmail, "Subject added for " + academicYear, model);
+    }
 
+    // --- DELETE MAPPINGS ---
     @GetMapping("/admin/delete-teacher/{id}")
     public String deleteTeacher(@PathVariable("id") Long id, @RequestParam(value="adminEmail", required=false) String email, Model model) {
         teacherRepository.deleteById(id);
@@ -77,27 +89,6 @@ public class PortalController {
         return populateAdminData(email, "Subject link removed.", model);
     }
 
-    @GetMapping("/admin/delete-classroom/{id}")
-    public String deleteClassroom(@PathVariable("id") Long id, @RequestParam(value="adminEmail", required=false) String email, Model model) {
-        classroomRepository.deleteById(id);
-        return populateAdminData(email, "Classroom removed.", model);
-    }
-
-    @GetMapping("/admin/delete-course/{id}")
-    public String deleteCourse(@PathVariable("id") Long id, @RequestParam(value="adminEmail", required=false) String email, Model model) {
-        courseRepository.deleteById(id);
-        return populateAdminData(email, "Course wiped.", model);
-    }
-
-    @GetMapping("/admin/delete-mapping/{id}")
-    public String deleteMapping(@PathVariable("id") Long id, @RequestParam(value="adminEmail", required=false) String email, Model model) {
-        yearSubjectMappingRepository.deleteById(id);
-        return populateAdminData(email, "Mapping dropped.", model);
-    }
-
-    // --- OTHER POST HANDLERS (Keep your existing @PostMappings as they were) ---
-    // Ensure every method calls populateAdminData at the end to refresh the view.
-    
     @PostMapping("/admin/run-compiler")
     public String runAutoCompiler(@RequestParam("adminEmail") String email, Model model) {
         return populateAdminData(email, timetableService.generateAutomaticTimetable(), model);
