@@ -8,7 +8,7 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "subjects")
-public class Subject { // Kept exactly as Subject!
+public class Subject {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,12 +17,11 @@ public class Subject { // Kept exactly as Subject!
     private String subjectCode;
     private String subjectName;
     private String branch;
-    private String assignedTeacher; // Tracks who teaches this subject
-    private String academicYear;    // This is the missing field causing the service errors
+    private String assignedTeacher;
+    private String academicYear;
 
     public Subject() {}
 
-    // Getters and Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
     
