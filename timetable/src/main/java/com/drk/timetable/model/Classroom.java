@@ -29,4 +29,8 @@ public class Classroom {
 
     public int getCapacity() { return capacity; }
     public void setCapacity(int capacity) { this.capacity = capacity; }
+    public Classroom(String roomNumber, int capacity) {
+    this.roomNumber = roomNumber;
+    this.capacity = capacity;
+}
 }
