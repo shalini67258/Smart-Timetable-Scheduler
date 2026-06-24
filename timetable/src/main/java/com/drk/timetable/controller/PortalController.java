@@ -42,16 +42,18 @@ public class PortalController {
     }
 
     // --- CRITICAL FIXES FOR 404 ---
-    @GetMapping("/")
-    public String showLandingPage() { 
-        return "index"; // Ensure index.html is in src/main/resources/templates/
-    }
+   // CHANGE THIS:
+@GetMapping("/")
+public String showLandingPage() { 
+    return "portal/index"; // Added 'portal/' prefix
+}
 
-    @GetMapping("/admin/dashboard")
-    public String showAdminDashboard(Model model) {
-        return populateAdminData("admin@drk.in", null, model);
-    }
-
+// ALSO CHANGE THIS (if it exists):
+@GetMapping("/admin/dashboard")
+public String showAdminDashboard(Model model) {
+    // Make sure populateAdminData returns "portal/admin-dashboard" (which it does)
+    return populateAdminData("admin@drk.in", null, model);
+}
     @GetMapping("/login/{role}")
     public String showLoginPage(@PathVariable("role") String role, Model model) {
         model.addAttribute("role", role != null ? role.toUpperCase() : "USER");
