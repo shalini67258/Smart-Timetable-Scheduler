@@ -81,14 +81,16 @@ public class PortalController {
     @PostMapping("/admin/add-subject") public String addSubject(@RequestParam String subjectCode, @RequestParam String subjectName, @RequestParam String branch, @RequestParam String academicYear, @RequestParam String assignedTeacher, @RequestParam String adminEmail, Model model) { subjectRepository.save(new Subject(subjectCode, subjectName, branch, academicYear, assignedTeacher)); return populateAdminData(adminEmail, "Subject added.", model); }
     @PostMapping("/admin/save-settings") public String saveSystemSettings(@RequestParam String startTime, @RequestParam String duration, @RequestParam String shortBreak, @RequestParam String lunchBreak, @RequestParam String sections, @RequestParam String days, @RequestParam String adminEmail, Model model) { appSettingRepository.save(new AppSetting("START_TIME", startTime)); appSettingRepository.save(new AppSetting("PERIOD_DURATION", duration)); appSettingRepository.save(new AppSetting("SHORT_BREAK", shortBreak)); appSettingRepository.save(new AppSetting("LUNCH_BREAK", lunchBreak)); appSettingRepository.save(new AppSetting("SECTIONS", sections)); appSettingRepository.save(new AppSetting("WORKING_DAYS", days)); return populateAdminData(adminEmail, "Settings updated.", model); }
 
-    // THIS IS THE MISSING ROUTE FIXING YOUR 404
+    // FIXED ROUTE: Uses subjectId to fetch data from DB safely
     @PostMapping("/admin/map-year-subject")
     public String mapYearToSubject(@RequestParam String academicYear, 
-                                   @RequestParam String subjectName, 
-                                   @RequestParam String subjectCode, 
-                                   @RequestParam String teacherName, 
+                                   @RequestParam Long subjectId, 
                                    @RequestParam String adminEmail, Model model) {
-        yearSubjectMappingRepository.save(new YearSubjectMapping(academicYear, subjectName, subjectCode, teacherName));
+        
+        Subject s = subjectRepository.findById(subjectId)
+                        .orElseThrow(() -> new IllegalArgumentException("Subject not found"));
+        
+        yearSubjectMappingRepository.save(new YearSubjectMapping(academicYear, s.getSubjectName(), s.getSubjectCode(), s.getAssignedTeacher()));
         return populateAdminData(adminEmail, "Mapping saved successfully.", model);
     }
 
